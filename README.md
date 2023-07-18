@@ -29,6 +29,8 @@ $ ./a.out > image.ppm
 
 This was the final result.
 
+![Final Render](/final_render_1.png)
+
 
 
 
