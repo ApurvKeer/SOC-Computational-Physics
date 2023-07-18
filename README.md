@@ -5,7 +5,7 @@ Apurv Keer | 210260007 | BTech 3rd Year Engineering Physics
 
 ## Numerical Methods in Computational Physics
 
-This involved implementation of some [numerical techniques](/Numerical%20Methods/), like the 
+This involved implementation of some [numerical techniques](/Numerical%20Methods/), like the Euler, Jacobi, Gauss-Seidel, Newton-Raphson, and Secant methods. This is illustrated in a [jupyter notebook](/Numerical%20Methods/Apurv_Numerical_Method.ipynb).
 
 ## Visualizing Poisson Equation Solutions
 
