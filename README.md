@@ -39,7 +39,9 @@ $$ \frac{d^2}{dx^2} \vec{r} = -\frac{3}{2} h^2 \frac{\hat{r}}{r^5} $$
 
 I have uv wrapped two images, one on the accretion disk and the other on the celestial sphere. This was the result.
 
+![BlackRay final image](/Raytracer2/3.png)
 
+Here you can see the accretion disk warped around the black hole and distortion in the celestial sphere in the form of an Einstein ring.
 
 
 
