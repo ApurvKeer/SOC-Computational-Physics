@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cmath>
-#include "scene.h"
+#include "texture.h"
 #include "Vector3D.h"
 #include "Matrix3x3.h"
 #include <random>
@@ -61,27 +61,27 @@ double mod(double a, double b){
     }
 }
 
-Vector3D random_color(int x, int y){
-    Vector3D r(double(x)/RESOLUTION[0], double(y)/RESOLUTION[1], 0.25);
-    return r;
-}
+// Vector3D random_color(int x, int y){
+//     Vector3D r(double(x)/RESOLUTION[0], double(y)/RESOLUTION[1], 0.25);
+//     return r;
+// }
 
-void bg_image_initial(){
-    for(int x=0; x < RESOLUTION[0]; ++x){
-        for(int y=0; y < RESOLUTION[1]; ++y){
-            Vector3D r;
-            if(rand()%100 > 95){
-                r = white;
-            }
-            else{
-                r = black;
-            }
-            bg_image[x][y][0] = r[0];
-            bg_image[x][y][1] = r[1];
-            bg_image[x][y][2] = r[2];
-        }
-    }
-}
+// void bg_image_initial(){
+//     for(int x=0; x < RESOLUTION[0]; ++x){
+//         for(int y=0; y < RESOLUTION[1]; ++y){
+//             Vector3D r;
+//             if(rand()%100 > 95){
+//                 r = white;
+//             }
+//             else{
+//                 r = black;
+//             }
+//             bg_image[x][y][0] = r[0];
+//             bg_image[x][y][1] = r[1];
+//             bg_image[x][y][2] = r[2];
+//         }
+//     }
+// }
 
 double clip(double x, double min, double max){
     if(x < min){
@@ -96,15 +96,28 @@ double clip(double x, double min, double max){
     
 }
 
-Vector3D texture_lookup(double* uvarrin){
+Vector3D texture_lookup_bg(double* uvarrin){
     double uvarr[2] = {clip(uvarrin[0], 0.0, 0.999), clip(uvarrin[1], 0.0, 0.999)};
 
-    uvarr[0] *= double(RESOLUTION[1]);
-    uvarr[1] *= double(RESOLUTION[0]);
+    uvarr[0] *= double(sky_height);
+    uvarr[1] *= double(sky_width);
 
-    int x = int(uvarr[0]);
-    int y = int(uvarr[1]);
+    int x = int(uvarr[1]);
+    int y = int(uvarr[0]);
 
-    Vector3D image(bg_image[y][x][0], bg_image[y][x][1], bg_image[y][x][2]);
+    Vector3D image(bg_image[x][y][0], bg_image[x][y][1], bg_image[x][y][2]);
+    return image;
+}
+
+Vector3D texture_lookup_ad(double* uvarrin){
+    double uvarr[2] = {clip(uvarrin[0], 0.0, 0.999), clip(uvarrin[1], 0.0, 0.999)};
+
+    uvarr[0] *= double(disk_height);
+    uvarr[1] *= double(disk_width);
+
+    int x = int(uvarr[1]);
+    int y = int(uvarr[0]);
+
+    Vector3D image(ad_image[x][y][0], ad_image[x][y][1], ad_image[x][y][2]);
     return image;
 }

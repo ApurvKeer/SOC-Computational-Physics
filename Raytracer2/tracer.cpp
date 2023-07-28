@@ -3,6 +3,7 @@
 #include "Vector3D.h"
 #include "Matrix3x3.h"
 #include "utils.h"
+// #include "texture.h"
 
 int main(){
     Vector3D FRONTVEC(LOOKAT - CAMERA_POS);
@@ -26,13 +27,14 @@ int main(){
     //     pixelindices[i] = i;
     // }
 
-    std::ofstream MyFile("1.ppm");
+    std::ofstream MyFile("3.ppm");
 
     MyFile << "P3\n" << RESOLUTION[0] << ' ' << RESOLUTION[1] << "\n255\n";
 
     Vector3D object_color(0.0, 0.0, 0.0);
     double object_alpha = 0.0;
-    bg_image_initial();
+    bgimage_initialize();
+    adimage_initialize();
 
     for(int y = 0; y < RESOLUTION[1] ; y++){
         for(int x = 0; x < RESOLUTION[0]; x++){
@@ -70,10 +72,24 @@ int main(){
                 }
 
                 if(diskmask == 1){
-                    Vector3D disk_color(1.0, 1.0, 0.98);
-                    double disk_alpha = 1.0;
+                    double lambda = - point[1]/velocity[1];
+                    Vector3D col_point = point + lambda*velocity;
+                    double colpointnorm = col_point.norm();
 
-                    object_color = disk_color;
+                    double phi = atan(col_point[0]/point[2]);
+                    double uv[2] = {mod(phi+2.0*M_PI, 2.0*M_PI)/(2.0*M_PI), (colpointnorm - disk_inner)/(disk_outer - disk_inner)};
+                    clip(uv[0], 0.0, 1.0);
+                    clip(uv[1], 0.0, 1.0);
+
+                    // Vector3D disk_color(1.0, 1.0, 0.98);
+                    // double disk_alpha = 1.0;
+
+                    Vector3D disk_color;
+                    double disk_alpha;
+                    disk_color = texture_lookup_ad(uv);
+                    disk_alpha = diskmask * clip(disk_color.norm2()/3.0, 0.0, 1.0);
+
+                    object_color = blendcolors(disk_color, disk_alpha, object_color, object_alpha);
                     object_alpha = blendalpha(disk_alpha, object_alpha);
 
                     //std::cout << "Hit disk \n";
@@ -98,18 +114,28 @@ int main(){
 
             double vphi = atan(velocity[0]/velocity[2]);
             double vtheta = atan(velocity[1]/velocity.norm());
-            double vuv[2] = {mod((vphi+4.5),(2.0*M_PI))/(2.0*M_PI), (vtheta+M_PI/2.0)/M_PI};
+            // double vuv[2] = {mod((vphi+4.5),(2.0*M_PI))/(2.0*M_PI), (vtheta+M_PI/2.0)/M_PI};
 
-            Vector3D bg_color = texture_lookup(vuv);
+            double vuv[2] = {mod(0.5 + vphi/(2.0*M_PI), 1.0), mod(0.5 - (vtheta/M_PI), 1.0)};
+            if(vuv[0] < 0){vuv[0] = 1.0 + vuv[0];}
+            if(vuv[1] < 0){vuv[1] = 1.0 + vuv[1];}
+
+            Vector3D bg_color = texture_lookup_bg(vuv);
             // Vector3D bg_color(bg_image[x][y][0], bg_image[x][y][1], bg_image[x][y][2]);
             double bg_alpha = 1.0;
 
             object_color = blendcolors(bg_color, bg_alpha, object_color, object_alpha);
             object_alpha = blendalpha(bg_alpha, object_alpha);
 
-            int ir = static_cast<int>(255.999 * object_color[0]);
-            int ig = static_cast<int>(255.999 * object_color[1]);
-            int ib = static_cast<int>(255.999 * object_color[2]);
+            double color[3] = {object_color[0], object_color[1], object_color[2]};
+
+            if(sRGB_out){
+                rgbtosrgb(color);
+            }
+
+            int ir = static_cast<int>(255.999 * color[0]);
+            int ig = static_cast<int>(255.999 * color[1]);
+            int ib = static_cast<int>(255.999 * color[2]);
 
             MyFile << ir << ' ' << ig << ' ' << ib << '\n';   
 
