@@ -19,7 +19,7 @@ This was the second Mini-Project. The [project](/Hydrogen%20Atom/) involved nume
 
 This was the third Mini-Project. The project involves solving [time evolution](/Time%20Evolutions/) systems of equations using Runge-Kutta Algorithms.
 
-## Raytracing in Curved Spacetime
+## Raytracing in Curved Spacetime (Kerr Blackhole)
 
 This is an open-ended project. The project involves visualizing a Kerr Blackhole by solving null geodesics around the spacetime. I have written the code in C++ and Fortran. The code prints an image in ppm P3 format. To save it, run
 
@@ -30,6 +30,14 @@ $ ./a.out > image.ppm
 This was the final result.
 
 ![Final Render](/final_render_1.png)
+
+##BlackRay
+
+I wrote a better raytracer. This one ray traces a Schwarzschild Black Hole. This was based on the previous work [Starless]{https://rantonels.github.io/starless/}, by Rantonels The geodesics equation was written in the form of a Binet equation given by,
+
+$$ \frac{d^2}{dx^2} \vec{r} = -\frac{3}{2} h^2 \frac{\hat{r}}{r^5} $$
+
+I have uv wrapped two images, one on the accretion disk and the other on the celestial sphere. This was the result.
 
 
 
